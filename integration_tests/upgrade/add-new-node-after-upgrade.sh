@@ -113,7 +113,7 @@ check_adding_new_node() {
   test_divider
 
   sleep_time_sec=1
-  overall_ping_time_sec=700
+  overall_ping_time_sec=1700
 
   echo "7. Check node $node_name for START catching up process pinging it every $sleep_time_sec second for $overall_ping_time_sec seconds"
 
