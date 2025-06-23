@@ -35,6 +35,7 @@ function check_expected_catching_up_status_for_interval {
 
     while [ $seconds -lt $overall_ping_time_sec ]; do
         local dcld_status=$(docker exec --user root $node_name dcld status 2>&1)
+        echo "$dcld_status"
         
         status_substring="\"catching_up\":$expected_status"
         if [[ $dcld_status == *"$status_substring"* ]]; then
@@ -113,7 +114,7 @@ check_adding_new_node() {
   test_divider
 
   sleep_time_sec=1
-  overall_ping_time_sec=1700
+  overall_ping_time_sec=700
 
   echo "7. Check node $node_name for START catching up process pinging it every $sleep_time_sec second for $overall_ping_time_sec seconds"
 
