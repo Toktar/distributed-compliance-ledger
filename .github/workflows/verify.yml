@@ -18,7 +18,7 @@ name: Check Tests and Documentation
 on:
   push:
     branches:
-      - master
+      - fix/upgrade_test_and_fix_rollback
   pull_request:
     branches:
       - master
@@ -125,7 +125,7 @@ jobs:
             ${{ runner.os }}-go-
       - name: Run integration tests
         shell: bash
-        run: integration_tests/run-all.sh
+        run: integration_tests/run-all.sh upgrade
   lint:
     if: needs.changes.outputs.go == 'true'
     name: Check linter issues with golangci-lint tool
