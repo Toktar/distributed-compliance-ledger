@@ -102,12 +102,12 @@ for i in $(seq 0 $((node_count-1))); do
 done
 
 echo "Building new dcld binary v1.4.5 from source"
-make build
 
 # Upgrade all validator nodes to 1.4.5 (local build)
 for i in $(seq 1 $((node_count-1))); do
   name="node$i"
   result=$(docker cp $DCLD_BIN_NEW $name:/var/lib/dcl/.dcl/cosmovisor/current/bin/)
+  result=$(docker exec $name dcld rollback --hard)
   echo "$result"
   docker restart $name
 done
