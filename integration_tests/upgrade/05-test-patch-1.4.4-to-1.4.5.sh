@@ -44,7 +44,7 @@ check_pool_accepts_tx() {
 
 
 test_divider
-
+echo $(docker ps)
 if check_pool_accepts_tx; then
   echo "Pool is not accepting transactions as expected"
   #exit 1
