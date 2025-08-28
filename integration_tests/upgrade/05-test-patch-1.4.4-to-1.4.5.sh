@@ -4,13 +4,16 @@ set -euo pipefail
 source integration_tests/cli/common.sh
 
 binary_version="v1.4.4"
-local_build_bin="./build/dcld" # Path to locally built dcld v1.4.5
+binary_version_new="v1.4.5-0.dev.1"
 node_count=4
 
 wget -O dcld_old "https://github.com/zigbee-alliance/distributed-compliance-ledger/releases/download/$binary_version/dcld"
 chmod ugo+x dcld_old
+wget -O dcld_new "https://github.com/zigbee-alliance/distributed-compliance-ledger/releases/download/$binary_version_new/dcld"
+chmod ugo+x dcld_new
 
 DCLD_BIN_OLD="./dcld_old"
+DCLD_BIN_NEW="./dcld_new"  # Path to locally built dcld v1.4.5
 
 check_pool_accepts_tx() {
   # Generate random test data for transaction
@@ -104,7 +107,7 @@ make build
 # Upgrade all validator nodes to 1.4.5 (local build)
 for i in $(seq 1 $((node_count-1))); do
   name="node$i"
-  result=$(docker cp $local_build_bin $name:/var/lib/dcl/.dcl/cosmovisor/current/bin/)
+  result=$(docker cp $DCLD_BIN_NEW $name:/var/lib/dcl/.dcl/cosmovisor/current/bin/)
   echo "$result"
   docker restart $name
 done
@@ -112,7 +115,7 @@ done
 sleep 10
 
 # Check that pool accepts transactions again
-if check_pool_accepts_tx "$local_build_bin"; then
+if check_pool_accepts_tx "$DCLD_BIN_NEW"; then
   echo "Pool accepts transactions after upgrade"
 else
   echo "Pool does NOT accept transactions after upgrade, test failed"
