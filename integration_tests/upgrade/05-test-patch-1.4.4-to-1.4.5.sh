@@ -30,7 +30,9 @@ check_pool_accepts_tx() {
     --companyPreferredName="$company_preferred_name" \
     --vendorLandingPageURL="$vendor_landing_page_url" \
     --from=jack --yes || true)
+  echo $tx_result
   result=$(get_txn_result "$tx_result")
+  echo $result
   if [[ "$tx_result" == *"code\": 0"* ]]; then
     echo "Pool accepts transactions"
     return 0
@@ -117,6 +119,7 @@ if check_pool_accepts_tx "$DCLD_BIN_NEW"; then
   echo "Pool accepts transactions after upgrade"
 else
   echo "Pool does NOT accept transactions after upgrade, test failed"
+  echo $($DCLD_BIN_NEW status)
   echo $(docker logs -n 100 node1)
   exit 1
 fi
