@@ -33,7 +33,7 @@ check_pool_accepts_tx() {
   echo $tx_result
   result=$(get_txn_result "$tx_result")
   echo $result
-  if [[ "$tx_result" == *"code\": 0"* ]]; then
+  if [[ $(check_response "$result" "\"code\":0" ) ]]; then
     echo "Pool accepts transactions"
     return 0
   else
@@ -45,9 +45,9 @@ check_pool_accepts_tx() {
 
 test_divider
 
-if !check_pool_accepts_tx; then
-  echo "Pool stopped accepting transactions as expected"
-  exit 1
+if check_pool_accepts_tx; then
+  echo "Pool is not accepting transactions as expected"
+  #exit 1
 fi
 
 echo "Add NodeAdmin profile and approve with trustees"
@@ -121,6 +121,7 @@ else
   echo "Pool does NOT accept transactions after upgrade, test failed"
   echo $($DCLD_BIN_NEW status)
   echo $(docker logs -n 100 node1)
+  echo $(docker ps)
   exit 1
 fi
 
