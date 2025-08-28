@@ -30,9 +30,7 @@ check_pool_accepts_tx() {
     --companyPreferredName="$company_preferred_name" \
     --vendorLandingPageURL="$vendor_landing_page_url" \
     --from=jack --yes || true)
-  echo "$tx_result"
   result=$(get_txn_result "$tx_result")
-  echo "$result"
   if [[ "$tx_result" == *"code\": 0"* ]]; then
     echo "Pool accepts transactions"
     return 0
@@ -53,7 +51,6 @@ fi
 echo "Add NodeAdmin profile and approve with trustees"
 random_string nodeadmin_account
 passphrase="test1234"
-echo "$vid"
 echo $passphrase | $DCLD_BIN_OLD keys add $nodeadmin_account
 nodeadmin_address=$(echo $passphrase | $DCLD_BIN_OLD keys show $nodeadmin_account -a)
 nodeadmin_pubkey=$(echo $passphrase | $DCLD_BIN_OLD keys show $nodeadmin_account -p)
@@ -107,9 +104,10 @@ echo "Building new dcld binary v1.4.5 from source"
 for i in $(seq 1 $((node_count-1))); do
   name="node$i"
   result=$(docker cp $DCLD_BIN_NEW $name:/var/lib/dcl/.dcl/cosmovisor/current/bin/)
-  result=$(docker exec $name dcld rollback --hard)
+  docker stop $name
+  result=$($DCLD_BIN_NEW rollback --hard --home ./.localnet/$name)
   echo "$result"
-  docker restart $name
+  docker start $name
 done
 
 sleep 10
