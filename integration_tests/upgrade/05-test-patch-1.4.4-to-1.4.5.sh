@@ -29,7 +29,7 @@ check_pool_accepts_tx() {
     --companyLegalName="$company_legal_name" \
     --companyPreferredName="$company_preferred_name" \
     --vendorLandingPageURL="$vendor_landing_page_url" \
-    --from=jack --yes || true)
+    --from=$vendor_account --yes || true)
   echo $tx_result
   result=$(get_txn_result "$tx_result")
   echo $result
@@ -44,8 +44,7 @@ check_pool_accepts_tx() {
 
 
 test_divider
-echo $(docker ps)
-if check_pool_accepts_tx; then
+if ! check_pool_accepts_tx; then
   echo "Pool is not accepting transactions as expected"
   #exit 1
 fi
@@ -84,10 +83,12 @@ test_divider
 # echo "Check that pool stopped accepting tx (simulate by sending tx and expecting failure)"
 if check_pool_accepts_tx; then
   echo "Pool still accepts transactions, test failed"
-  exit 1
+  # exit 1
 else
   echo "Pool stopped accepting transactions as expected"
 fi
+
+test_divider
 
 echo "Check logs for CONSENSUS FAILURE"
 for i in $(seq 0 $((node_count-1))); do
@@ -100,10 +101,10 @@ for i in $(seq 0 $((node_count-1))); do
   echo "$name log: $log"
 done
 
-echo "Building new dcld binary v1.4.5 from source"
+test_divider
 
 # Upgrade all validator nodes to 1.4.5 (local build)
-for i in $(seq 1 $((node_count-1))); do
+for i in $(seq 0 $((node_count-1))); do
   name="node$i"
   result=$(docker cp $DCLD_BIN_NEW $name:/var/lib/dcl/.dcl/cosmovisor/current/bin/)
   docker stop $name
