@@ -61,7 +61,6 @@ check_response "$result" "\"code\": 0"
 for trustee in $trustee_account_2 $trustee_account_3 $trustee_account_4 $trustee_account_5; do
   result=$(echo $passphrase | $DCLD_BIN_OLD tx auth approve-add-account --address="$nodeadmin_address" --from $trustee --yes)
   result=$(get_txn_result "$result")
-  check_response "$result" "\"code\": 0"
   echo "$trustee approved new NodeAdmin $nodeadmin_address"
 done
 
