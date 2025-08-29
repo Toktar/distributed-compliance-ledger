@@ -7,7 +7,7 @@ binary_version_old="v1.4.4"
 binary_version_new="v1.4.5-0.dev.1"
 node_count=4
 
-wget -O dcld_$binary_version_neww "https://github.com/zigbee-alliance/distributed-compliance-ledger/releases/download/$binary_version_new/dcld"
+wget -O dcld_$binary_version_new "https://github.com/zigbee-alliance/distributed-compliance-ledger/releases/download/$binary_version_new/dcld"
 chmod ugo+x dcld_new
 
 
