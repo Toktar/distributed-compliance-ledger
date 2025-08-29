@@ -202,5 +202,7 @@ echo "Check logs for executed block"
   fi
   echo "$name log: $log"
 
+echo $(curl http://localhost:26657/consensus_state | jq )
+
 test_divider
 echo "Consensus failure patch test passed"
