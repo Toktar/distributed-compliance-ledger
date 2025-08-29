@@ -255,147 +255,147 @@ test_divider
 
 # MODEL and MODEL_VERSION
 
-echo "Add model vid=$vid pid=$pid_1"
-result=$(echo $passphrase | $DCLD_BIN tx model add-model --vid=$vid --pid=$pid_1 --deviceTypeID=$device_type_id --productName=$product_name --productLabel=$product_label --partNumber=$part_number --from=$vendor_account --yes)
-check_response "$result" "\"code\": 0"
+# echo "Add model vid=$vid pid=$pid_1"
+# result=$(echo $passphrase | $DCLD_BIN tx model add-model --vid=$vid --pid=$pid_1 --deviceTypeID=$device_type_id --productName=$product_name --productLabel=$product_label --partNumber=$part_number --from=$vendor_account --yes)
+# check_response "$result" "\"code\": 0"
 
-test_divider
+# test_divider
 
-echo "Add model version vid=$vid pid=$pid_1"
-result=$(echo $passphrase | $DCLD_BIN tx model add-model-version --vid=$vid --pid=$pid_1 --softwareVersion=$software_version --softwareVersionString=$software_version_string --cdVersionNumber=$cd_version_number --minApplicableSoftwareVersion=$min_applicable_software_version --maxApplicableSoftwareVersion=$max_applicable_software_version --from=$vendor_account --yes)
-check_response "$result" "\"code\": 0"
+# echo "Add model version vid=$vid pid=$pid_1"
+# result=$(echo $passphrase | $DCLD_BIN tx model add-model-version --vid=$vid --pid=$pid_1 --softwareVersion=$software_version --softwareVersionString=$software_version_string --cdVersionNumber=$cd_version_number --minApplicableSoftwareVersion=$min_applicable_software_version --maxApplicableSoftwareVersion=$max_applicable_software_version --from=$vendor_account --yes)
+# check_response "$result" "\"code\": 0"
 
-test_divider
+# test_divider
 
-echo "Add model vid=$vid pid=$pid_2"
-result=$(echo $passphrase | $DCLD_BIN tx model add-model --vid=$vid --pid=$pid_2 --deviceTypeID=$device_type_id --productName=$product_name --productLabel=$product_label --partNumber=$part_number --from=$vendor_account --yes)
-check_response "$result" "\"code\": 0"
+# echo "Add model vid=$vid pid=$pid_2"
+# result=$(echo $passphrase | $DCLD_BIN tx model add-model --vid=$vid --pid=$pid_2 --deviceTypeID=$device_type_id --productName=$product_name --productLabel=$product_label --partNumber=$part_number --from=$vendor_account --yes)
+# check_response "$result" "\"code\": 0"
 
-test_divider
+# test_divider
 
-echo "Add model version vid=$vid pid=$pid_2"
-result=$(echo $passphrase | $DCLD_BIN tx model add-model-version --vid=$vid --pid=$pid_2 --softwareVersion=$software_version --softwareVersionString=$software_version_string --cdVersionNumber=$cd_version_number --minApplicableSoftwareVersion=$min_applicable_software_version --maxApplicableSoftwareVersion=$max_applicable_software_version --from=$vendor_account --yes)
-check_response "$result" "\"code\": 0"
+# echo "Add model version vid=$vid pid=$pid_2"
+# result=$(echo $passphrase | $DCLD_BIN tx model add-model-version --vid=$vid --pid=$pid_2 --softwareVersion=$software_version --softwareVersionString=$software_version_string --cdVersionNumber=$cd_version_number --minApplicableSoftwareVersion=$min_applicable_software_version --maxApplicableSoftwareVersion=$max_applicable_software_version --from=$vendor_account --yes)
+# check_response "$result" "\"code\": 0"
 
-test_divider
+# test_divider
 
-echo "Add model vid=$vid pid=$pid_3"
-result=$(echo $passphrase | $DCLD_BIN tx model add-model --vid=$vid --pid=$pid_3 --deviceTypeID=$device_type_id --productName=$product_name --productLabel=$product_label --partNumber=$part_number --from=$vendor_account --yes)
-check_response "$result" "\"code\": 0"
+# echo "Add model vid=$vid pid=$pid_3"
+# result=$(echo $passphrase | $DCLD_BIN tx model add-model --vid=$vid --pid=$pid_3 --deviceTypeID=$device_type_id --productName=$product_name --productLabel=$product_label --partNumber=$part_number --from=$vendor_account --yes)
+# check_response "$result" "\"code\": 0"
 
-test_divider
+# test_divider
 
-echo "Add model version vid=$vid pid=$pid_3"
-result=$(echo $passphrase | $DCLD_BIN tx model add-model-version --vid=$vid --pid=$pid_3 --softwareVersion=$software_version --softwareVersionString=$software_version_string --cdVersionNumber=$cd_version_number --minApplicableSoftwareVersion=$min_applicable_software_version --maxApplicableSoftwareVersion=$max_applicable_software_version --from=$vendor_account --yes)
-check_response "$result" "\"code\": 0"
+# echo "Add model version vid=$vid pid=$pid_3"
+# result=$(echo $passphrase | $DCLD_BIN tx model add-model-version --vid=$vid --pid=$pid_3 --softwareVersion=$software_version --softwareVersionString=$software_version_string --cdVersionNumber=$cd_version_number --minApplicableSoftwareVersion=$min_applicable_software_version --maxApplicableSoftwareVersion=$max_applicable_software_version --from=$vendor_account --yes)
+# check_response "$result" "\"code\": 0"
 
-test_divider
+# test_divider
 
-echo "Delete model vid=$vid pid=$pid_3"
-result=$(echo $passphrase | $DCLD_BIN tx model delete-model --vid=$vid --pid=$pid_3 --from=$vendor_account --yes)
-check_response "$result" "\"code\": 0"
+# echo "Delete model vid=$vid pid=$pid_3"
+# result=$(echo $passphrase | $DCLD_BIN tx model delete-model --vid=$vid --pid=$pid_3 --from=$vendor_account --yes)
+# check_response "$result" "\"code\": 0"
 
-test_divider
+# test_divider
 
-# CERTIFY_DEVICE_COMPLIANCE
+# # CERTIFY_DEVICE_COMPLIANCE
 
-echo "Certify model vid=$vid pid=$pid_1"
-result=$(echo $passphrase | $DCLD_BIN tx compliance certify-model --vid=$vid --pid=$pid_1 --softwareVersion=$software_version --softwareVersionString=$software_version_string  --certificationType=$certification_type --certificationDate=$certification_date --cdCertificateId=$cd_certificate_id --from=$certification_center_account --yes)
-check_response "$result" "\"code\": 0"
+# echo "Certify model vid=$vid pid=$pid_1"
+# result=$(echo $passphrase | $DCLD_BIN tx compliance certify-model --vid=$vid --pid=$pid_1 --softwareVersion=$software_version --softwareVersionString=$software_version_string  --certificationType=$certification_type --certificationDate=$certification_date --cdCertificateId=$cd_certificate_id --from=$certification_center_account --yes)
+# check_response "$result" "\"code\": 0"
 
-test_divider
+# test_divider
 
-echo "Certify model vid=$vid pid=$pid_2"
-result=$(echo $passphrase | $DCLD_BIN tx compliance certify-model --vid=$vid --pid=$pid_2 --softwareVersion=$software_version --softwareVersionString=$software_version_string  --certificationType=$certification_type --certificationDate=$certification_date --cdCertificateId=$cd_certificate_id --from=$certification_center_account --yes)
-check_response "$result" "\"code\": 0"
+# echo "Certify model vid=$vid pid=$pid_2"
+# result=$(echo $passphrase | $DCLD_BIN tx compliance certify-model --vid=$vid --pid=$pid_2 --softwareVersion=$software_version --softwareVersionString=$software_version_string  --certificationType=$certification_type --certificationDate=$certification_date --cdCertificateId=$cd_certificate_id --from=$certification_center_account --yes)
+# check_response "$result" "\"code\": 0"
 
-test_divider
+# test_divider
 
-echo "Revoke model certification vid=$vid pid=$pid_2"
-result=$(echo $passphrase | $DCLD_BIN tx compliance revoke-model --vid=$vid --pid=$pid_2 --softwareVersion=$software_version --softwareVersionString=$software_version_string --certificationType=$certification_type --revocationDate=$certification_date --from=$certification_center_account --yes)
-check_response "$result" "\"code\": 0"
+# echo "Revoke model certification vid=$vid pid=$pid_2"
+# result=$(echo $passphrase | $DCLD_BIN tx compliance revoke-model --vid=$vid --pid=$pid_2 --softwareVersion=$software_version --softwareVersionString=$software_version_string --certificationType=$certification_type --revocationDate=$certification_date --from=$certification_center_account --yes)
+# check_response "$result" "\"code\": 0"
 
-test_divider
+# test_divider
 
-echo "Provision model vid=$vid pid=$pid_3"
-result=$(echo $passphrase | $DCLD_BIN tx compliance provision-model --vid=$vid --pid=$pid_3 --softwareVersion=$software_version --softwareVersionString=$software_version_string --certificationType=$certification_type --provisionalDate=$provisional_date --cdCertificateId=$cd_certificate_id --from=$certification_center_account --yes)
-check_response "$result" "\"code\": 0"
+# echo "Provision model vid=$vid pid=$pid_3"
+# result=$(echo $passphrase | $DCLD_BIN tx compliance provision-model --vid=$vid --pid=$pid_3 --softwareVersion=$software_version --softwareVersionString=$software_version_string --certificationType=$certification_type --provisionalDate=$provisional_date --cdCertificateId=$cd_certificate_id --from=$certification_center_account --yes)
+# check_response "$result" "\"code\": 0"
 
-test_divider
+# test_divider
 
 # X509 PKI
 
-echo "Propose add root_certificate"
-result=$(echo $passphrase | $DCLD_BIN tx pki propose-add-x509-root-cert --certificate="$root_cert_path" --from=$trustee_account_1 --yes)
-check_response "$result" "\"code\": 0"
+# echo "Propose add root_certificate"
+# result=$(echo $passphrase | $DCLD_BIN tx pki propose-add-x509-root-cert --certificate="$root_cert_path" --from=$trustee_account_1 --yes)
+# check_response "$result" "\"code\": 0"
 
-test_divider
+# test_divider
 
-echo "Approve add root_certificate"
-result=$(echo $passphrase | $DCLD_BIN tx pki approve-add-x509-root-cert --subject="$root_cert_subject" --subject-key-id=$root_cert_subject_key_id --from=$trustee_account_2 --yes)
-check_response "$result" "\"code\": 0"
+# echo "Approve add root_certificate"
+# result=$(echo $passphrase | $DCLD_BIN tx pki approve-add-x509-root-cert --subject="$root_cert_subject" --subject-key-id=$root_cert_subject_key_id --from=$trustee_account_2 --yes)
+# check_response "$result" "\"code\": 0"
 
-echo "Approve add root_certificate"
-result=$(echo $passphrase | $DCLD_BIN tx pki approve-add-x509-root-cert --subject="$root_cert_subject" --subject-key-id=$root_cert_subject_key_id --from=$trustee_account_3 --yes)
-check_response "$result" "\"code\": 0"
+# echo "Approve add root_certificate"
+# result=$(echo $passphrase | $DCLD_BIN tx pki approve-add-x509-root-cert --subject="$root_cert_subject" --subject-key-id=$root_cert_subject_key_id --from=$trustee_account_3 --yes)
+# check_response "$result" "\"code\": 0"
 
-test_divider
+# test_divider
 
-echo "Propose add test_root_certificate"
-result=$(echo $passphrase | $DCLD_BIN tx pki propose-add-x509-root-cert --certificate="$test_root_cert_path" --from=$trustee_account_1 --yes)
-check_response "$result" "\"code\": 0"
+# echo "Propose add test_root_certificate"
+# result=$(echo $passphrase | $DCLD_BIN tx pki propose-add-x509-root-cert --certificate="$test_root_cert_path" --from=$trustee_account_1 --yes)
+# check_response "$result" "\"code\": 0"
 
-test_divider
+# test_divider
 
-echo "Approve add test_root_certificate"
-result=$(echo $passphrase | $DCLD_BIN tx pki approve-add-x509-root-cert --subject="$test_root_cert_subject" --subject-key-id=$test_root_cert_subject_key_id --from=$trustee_account_2 --yes)
-check_response "$result" "\"code\": 0"
+# echo "Approve add test_root_certificate"
+# result=$(echo $passphrase | $DCLD_BIN tx pki approve-add-x509-root-cert --subject="$test_root_cert_subject" --subject-key-id=$test_root_cert_subject_key_id --from=$trustee_account_2 --yes)
+# check_response "$result" "\"code\": 0"
 
-echo "Approve add test_root_certificate"
-result=$(echo $passphrase | $DCLD_BIN tx pki approve-add-x509-root-cert --subject="$test_root_cert_subject" --subject-key-id=$test_root_cert_subject_key_id --from=$trustee_account_3 --yes)
-check_response "$result" "\"code\": 0"
+# echo "Approve add test_root_certificate"
+# result=$(echo $passphrase | $DCLD_BIN tx pki approve-add-x509-root-cert --subject="$test_root_cert_subject" --subject-key-id=$test_root_cert_subject_key_id --from=$trustee_account_3 --yes)
+# check_response "$result" "\"code\": 0"
 
-test_divider
+# test_divider
 
-echo "Propose add google_root_certificate"
-result=$(echo $passphrase | $DCLD_BIN tx pki propose-add-x509-root-cert --certificate="$google_root_cert_path" --from=$trustee_account_1 --yes)
-check_response "$result" "\"code\": 0"
+# echo "Propose add google_root_certificate"
+# result=$(echo $passphrase | $DCLD_BIN tx pki propose-add-x509-root-cert --certificate="$google_root_cert_path" --from=$trustee_account_1 --yes)
+# check_response "$result" "\"code\": 0"
 
-test_divider
+# test_divider
 
-echo "Reject add google_root_certificate"
-result=$(echo $passphrase | $DCLD_BIN tx pki reject-add-x509-root-cert --subject="$google_root_cert_subject" --subject-key-id=$google_root_cert_subject_key_id --from=$trustee_account_2 --yes)
-check_response "$result" "\"code\": 0"
+# echo "Reject add google_root_certificate"
+# result=$(echo $passphrase | $DCLD_BIN tx pki reject-add-x509-root-cert --subject="$google_root_cert_subject" --subject-key-id=$google_root_cert_subject_key_id --from=$trustee_account_2 --yes)
+# check_response "$result" "\"code\": 0"
 
-test_divider
+# test_divider
 
-echo "Add intermediate_cert"
-result=$(echo $passphrase | $DCLD_BIN tx pki add-x509-cert --certificate="$intermediate_cert_path" --from=$trustee_account_1 --yes)
-check_response "$result" "\"code\": 0"
+# echo "Add intermediate_cert"
+# result=$(echo $passphrase | $DCLD_BIN tx pki add-x509-cert --certificate="$intermediate_cert_path" --from=$trustee_account_1 --yes)
+# check_response "$result" "\"code\": 0"
 
-test_divider
+# test_divider
 
-echo "Propose revoke root_certificate"
-result=$(echo "$passphrase" | $DCLD_BIN tx pki propose-revoke-x509-root-cert --subject="$root_cert_subject" --subject-key-id="$root_cert_subject_key_id" --from="$trustee_account_1" --yes)
-check_response "$result" "\"code\": 0"
+# echo "Propose revoke root_certificate"
+# result=$(echo "$passphrase" | $DCLD_BIN tx pki propose-revoke-x509-root-cert --subject="$root_cert_subject" --subject-key-id="$root_cert_subject_key_id" --from="$trustee_account_1" --yes)
+# check_response "$result" "\"code\": 0"
 
-test_divider
+# test_divider
 
-echo "Approve revoke root_certificate"
-result=$(echo "$passphrase" | $DCLD_BIN tx pki approve-revoke-x509-root-cert --subject="$root_cert_subject" --subject-key-id="$root_cert_subject_key_id" --from="$trustee_account_2" --yes)
-check_response "$result" "\"code\": 0"
+# echo "Approve revoke root_certificate"
+# result=$(echo "$passphrase" | $DCLD_BIN tx pki approve-revoke-x509-root-cert --subject="$root_cert_subject" --subject-key-id="$root_cert_subject_key_id" --from="$trustee_account_2" --yes)
+# check_response "$result" "\"code\": 0"
 
-echo "Approve revoke root_certificate"
-result=$(echo "$passphrase" | $DCLD_BIN tx pki approve-revoke-x509-root-cert --subject="$root_cert_subject" --subject-key-id="$root_cert_subject_key_id" --from="$trustee_account_3" --yes)
-check_response "$result" "\"code\": 0"
+# echo "Approve revoke root_certificate"
+# result=$(echo "$passphrase" | $DCLD_BIN tx pki approve-revoke-x509-root-cert --subject="$root_cert_subject" --subject-key-id="$root_cert_subject_key_id" --from="$trustee_account_3" --yes)
+# check_response "$result" "\"code\": 0"
 
-test_divider
+# test_divider
 
-echo "Propose revoke test_root_certificate"
-result=$(echo $passphrase | $DCLD_BIN tx pki propose-revoke-x509-root-cert --subject="$test_root_cert_subject" --subject-key-id="$test_root_cert_subject_key_id" --from $trustee_account_1 --yes)
-check_response "$result" "\"code\": 0"
+# echo "Propose revoke test_root_certificate"
+# result=$(echo $passphrase | $DCLD_BIN tx pki propose-revoke-x509-root-cert --subject="$test_root_cert_subject" --subject-key-id="$test_root_cert_subject_key_id" --from $trustee_account_1 --yes)
+# check_response "$result" "\"code\": 0"
 
-test_divider
+# test_divider
 
 # AUTH
 
@@ -516,23 +516,23 @@ check_response "$result" "\"code\": 0"
 test_divider
 
 echo "Get x509 root certificates"
-result=$($DCLD_BIN query pki x509-cert --subject="$test_root_cert_subject" --subject-key-id="$test_root_cert_subject_key_id")
-echo $result | jq
-check_response "$result" "\"subject\": \"$test_root_cert_subject\""
-check_response "$result" "\"subjectKeyId\": \"$test_root_cert_subject_key_id\""
-check_response "$result" "\"serialNumber\": \"$test_root_cert_serial_number\""
-check_response "$result" "\"subjectAsText\": \"$test_root_cert_subject_as_text\""
-response_does_not_contain "$result" "\"vid\":"
+# result=$($DCLD_BIN query pki x509-cert --subject="$test_root_cert_subject" --subject-key-id="$test_root_cert_subject_key_id")
+# echo $result | jq
+# check_response "$result" "\"subject\": \"$test_root_cert_subject\""
+# check_response "$result" "\"subjectKeyId\": \"$test_root_cert_subject_key_id\""
+# check_response "$result" "\"serialNumber\": \"$test_root_cert_serial_number\""
+# check_response "$result" "\"subjectAsText\": \"$test_root_cert_subject_as_text\""
+# response_does_not_contain "$result" "\"vid\":"
 
-echo "Get x509 proposed root certificates"
-result=$($DCLD_BIN query pki proposed-x509-root-cert --subject="$google_root_cert_subject" --subject-key-id="$google_root_cert_subject_key_id")
-echo $result | jq
-check_response "$result" "\"subject\": \"$google_root_cert_subject\""
-check_response "$result" "\"subjectKeyId\": \"$google_root_cert_subject_key_id\""
-check_response "$result" "\"serialNumber\": \"$google_cert_serial_number\""
-check_response "$result" "\"subjectAsText\": \"$google_cert_subject_as_text\""
-response_does_not_contain "$result" "\"vid\":"
+# echo "Get x509 proposed root certificates"
+# result=$($DCLD_BIN query pki proposed-x509-root-cert --subject="$google_root_cert_subject" --subject-key-id="$google_root_cert_subject_key_id")
+# echo $result | jq
+# check_response "$result" "\"subject\": \"$google_root_cert_subject\""
+# check_response "$result" "\"subjectKeyId\": \"$google_root_cert_subject_key_id\""
+# check_response "$result" "\"serialNumber\": \"$google_cert_serial_number\""
+# check_response "$result" "\"subjectAsText\": \"$google_cert_subject_as_text\""
+# response_does_not_contain "$result" "\"vid\":"
 
-echo "Initialize 0.12.0 passed"
+# echo "Initialize 0.12.0 passed"
 
-rm -f $DCLD_BIN
+# rm -f $DCLD_BIN

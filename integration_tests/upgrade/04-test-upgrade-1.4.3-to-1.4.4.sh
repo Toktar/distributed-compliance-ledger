@@ -23,14 +23,14 @@ upgrade_checksum="sha256:f740b65e5b0d417856ea7c8caef0d937e5810d1b448efc58b984287
 binary_version_old="v1.4.3"
 binary_version_new="v1.4.4-5-dev"
 
-wget -O dcld_old "https://github.com/zigbee-alliance/distributed-compliance-ledger/releases/download/$binary_version_old/dcld"
-chmod ugo+x dcld_old
+# wget -O dcld_old "https://github.com/zigbee-alliance/distributed-compliance-ledger/releases/download/$binary_version_old/dcld"
+# chmod ugo+x dcld_old
 
-wget -O dcld_new "https://github.com/zigbee-alliance/distributed-compliance-ledger/releases/download/$binary_version_new/dcld"
-chmod ugo+x dcld_new
+wget -O dcld_$binary_version_new "https://github.com/zigbee-alliance/distributed-compliance-ledger/releases/download/$binary_version_new/dcld"
+chmod ugo+x dcld_$binary_version_new
 
-DCLD_BIN_OLD="./dcld_old"
-DCLD_BIN_NEW="./dcld_new"
+DCLD_BIN_OLD="./dcld_$binary_version_old"
+DCLD_BIN_NEW="./dcld_$binary_version_new"
 $DCLD_BIN_NEW config broadcast-mode sync
 ########################################################################################
 
