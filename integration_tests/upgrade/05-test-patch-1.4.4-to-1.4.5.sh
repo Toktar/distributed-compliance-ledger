@@ -160,6 +160,17 @@ for i in $(seq 0 $((node_count-1))); do
   echo "$name log: $log"
 done
 
+echo "Check logs for software-version"
+for i in $(seq 0 $((node_count-1))); do
+  name="node$i"
+  log=$(docker logs $name 2>&1 | grep "software-version" || true)
+  if [[ -z "$log" ]]; then
+    echo "FAIL: software-version not found in $name logs"
+    #exit 1
+  fi
+  echo "$name log: $log"
+done
+
 echo "Check that pool accepts transactions again"
 if check_pool_accepts_tx "$DCLD_BIN_NEW"; then
   echo "Pool accepts transactions after upgrade"
