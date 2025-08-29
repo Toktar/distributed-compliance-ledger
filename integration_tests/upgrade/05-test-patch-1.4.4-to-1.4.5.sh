@@ -130,7 +130,7 @@ for i in $(seq 0 $((node_count-1))); do
   echo "$result"
   cp --parents $DCLD_BIN_NEW $name:./.localnet/$name/cosmovisor/patches/v1.4.5/bin/dcld
   rm ./.localnet/$name/cosmovisor/current
-  ln -s /var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5 /var/lib/dcl/.dcl/cosmovisor/current
+  ln -s /var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5 /.localnet/$name/cosmovisor/current
   docker start $name
 
   echo $(docker exec $name /var/lib/dcl/.dcl/cosmovisor/current ls)
