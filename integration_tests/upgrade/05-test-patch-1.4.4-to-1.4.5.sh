@@ -30,6 +30,7 @@ check_pool_accepts_tx() {
     --companyPreferredName="$company_preferred_name" \
     --vendorLandingPageURL="$vendor_landing_page_url" \
     --from=$vendor_account --yes || true)
+  echo $tx_result
   result=$(get_txn_result "$tx_result")
   echo $result
   if $(_check_response "$result" "\"code\": 0" ); then
@@ -89,7 +90,7 @@ test_divider
 echo "Check logs for CONSENSUS FAILURE"
 for i in $(seq 0 $((node_count-1))); do
   name="node$i"
-  log=$(docker logs $name 2>&1 | grep "CONSENSUS FAILURE!!! err=\"failed to apply block" || true)
+  log=$(docker logs $name 2>&1 | grep "CONSENSUS FAILURE" | grep "failed to apply block" || true)
   if [[ -z "$log" ]]; then
     echo "FAIL: CONSENSUS FAILURE not found in $name logs"
     #exit 1
@@ -119,7 +120,10 @@ if check_pool_accepts_tx "$DCLD_BIN_NEW"; then
 else
   echo "FAIL: Pool does NOT accept transactions after upgrade, test failed"
   echo $($DCLD_BIN_NEW status)
-  echo $(docker logs -n 100 node1)
+  echo "node1"
+  echo $(docker logs -n 300 node1)
+  echo "node0"
+  echo $(docker logs -n 300 node0)
  # exit 1
 fi
 
