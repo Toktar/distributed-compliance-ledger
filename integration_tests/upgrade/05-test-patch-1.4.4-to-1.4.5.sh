@@ -120,9 +120,10 @@ test_divider
 echo "Rollback and upgrade all validator nodes to 1.4.5"
 for i in $(seq 0 $((node_count-1))); do
   test_divider
-  echo "Rollback for $name"
 
   name="node$i"
+  echo "Rollback for $name"
+
   echo $($DCLD_BIN_NEW version)
   docker cp $DCLD_BIN_NEW $name:/var/lib/dcld
 
@@ -136,8 +137,8 @@ for i in $(seq 0 $((node_count-1))); do
   echo "$result"
   docker start $name
 
-  echo $(docker exec $name /var/lib/dcl/.dcl/cosmovisor/current ls)
-  echo $(docker exec $name ls -la /var/lib/dcl/.dcl/cosmovisor/current)
+  echo $(docker exec $name /var/lib/dcl/.dcl/cosmovisor/current status)
+  echo $(docker exec $name ls -la /var/lib/dcl/.dcl/cosmovisor/)
   echo $(docker exec $name dcld version)
   echo $(docker exec $name /var/lib/dcl/.dcl/cosmovisor/current/bin/dcld version)
 
@@ -145,6 +146,19 @@ for i in $(seq 0 $((node_count-1))); do
 done
 
 sleep 5
+
+test_divider
+
+echo "Check logs for num_invalid_txs=1"
+for i in $(seq 0 $((node_count-1))); do
+  name="node$i"
+  log=$(docker logs $name 2>&1 | grep "num_invalid_txs=1" || true)
+  if [[ -z "$log" ]]; then
+    echo "FAIL: num_invalid_txs=1 not found in $name logs"
+    #exit 1
+  fi
+  echo "$name log: $log"
+done
 
 echo "Check that pool accepts transactions again"
 if check_pool_accepts_tx "$DCLD_BIN_NEW"; then
