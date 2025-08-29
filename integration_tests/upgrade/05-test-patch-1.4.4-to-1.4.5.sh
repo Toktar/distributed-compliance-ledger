@@ -109,7 +109,11 @@ for i in $(seq 0 $((node_count-1))); do
   docker stop $name
   result=$($DCLD_BIN_NEW rollback --hard --home ./.localnet/$name)
   echo "$result"
+  echo $(docker exec $name dcld version)
+  echo $(docker exec $name /var/lib/dcl/.dcl/cosmovisor/current/bin/dcld version)
   docker start $name
+
+  
 done
 
 sleep 5
