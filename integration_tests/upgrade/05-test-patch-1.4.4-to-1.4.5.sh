@@ -124,13 +124,16 @@ for i in $(seq 0 $((node_count-1))); do
 
   name="node$i"
   echo $($DCLD_BIN_NEW version)
-  result=$(docker cp $DCLD_BIN_NEW $name:/var/lib/dcld)
+  docker cp $DCLD_BIN_NEW $name:/var/lib/dcld
+
+  docker exec "$name" mkdir -p /var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5/bin
+  docker cp $DCLD_BIN_NEW $name:/var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5/bin/dcld
+  docker exec "$name" rm /var/lib/dcl/.dcl/cosmovisor/current
+  docker exec "$name" ln -s /var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5 /var/lib/dcl/.dcl/cosmovisor/current
+
   docker stop $name
   result=$($DCLD_BIN_NEW rollback --hard --home ./.localnet/$name)
   echo "$result"
-  cp --parents $DCLD_BIN_NEW $name:./.localnet/$name/cosmovisor/patches/v1.4.5/bin/dcld
-  rm ./.localnet/$name/cosmovisor/current
-  ln -s /var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5 /.localnet/$name/cosmovisor/current
   docker start $name
 
   echo $(docker exec $name /var/lib/dcl/.dcl/cosmovisor/current ls)
