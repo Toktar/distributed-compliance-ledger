@@ -128,7 +128,7 @@ for i in $(seq 0 $((node_count-1))); do
   docker cp $DCLD_BIN_NEW $name:/var/lib/dcld
 
   # docker exec "$name" mkdir -p /var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5/bin
-  docker cp $DCLD_BIN_NEW $name:/var/lib/dcl/.dcl/cosmovisor/updates/v1.4.4/bin/dcld
+  docker cp $DCLD_BIN_NEW $name:/var/lib/dcl/.dcl/cosmovisor/upgrades/v1.4.4/bin/dcld
   # docker exec "$name" rm /var/lib/dcl/.dcl/cosmovisor/current
   # docker exec "$name" ln -s /var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5 /var/lib/dcl/.dcl/cosmovisor/current
 
@@ -180,7 +180,7 @@ test_divider
 echo "Rollback and upgrade the last node"
 
 # docker exec "$container" mkdir -p /var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5/bin
-docker cp $DCLD_BIN_NEW $container:/var/lib/dcl/.dcl/cosmovisor/updates/v1.4.4/bin/dcld
+docker cp $DCLD_BIN_NEW $container:/var/lib/dcl/.dcl/cosmovisor/upgrades/v1.4.4/bin/dcld
 # docker exec "$container" rm /var/lib/dcl/.dcl/cosmovisor/current
 # docker exec "$container" ln -s /var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5 /var/lib/dcl/.dcl/cosmovisor/current
 docker exec $container pkill cosmovisor
