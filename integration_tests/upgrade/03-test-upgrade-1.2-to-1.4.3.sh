@@ -1315,5 +1315,5 @@ test_divider
 
 echo "Upgrade from 1.2 to 1.4.3 passed"
 
-rm -f $DCLD_BIN_OLD
-rm -f $DCLD_BIN_NEW
+# rm -f $DCLD_BIN_OLD
+# rm -f $DCLD_BIN_NEW
