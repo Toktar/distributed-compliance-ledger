@@ -179,7 +179,10 @@ test_divider
 
 echo "Rollback and upgrade the last node"
 
-docker cp $DCLD_BIN_NEW $container:/var/lib/dcl/.dcl/cosmovisor/current/bin/
+docker exec "$container" mkdir -p /var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5/bin
+docker cp $DCLD_BIN_NEW $container:/var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5/bin/dcld
+docker exec "$container" rm /var/lib/dcl/.dcl/cosmovisor/current
+docker exec "$container" ln -s /var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5 /var/lib/dcl/.dcl/cosmovisor/current
 docker exec $container pkill cosmovisor
 docker exec $container dcld rollback --hard
 docker exec -d $container cosmovisor run start
@@ -203,6 +206,7 @@ echo "Check logs for executed block"
   echo "$name log: $log"
 
 echo $(curl http://localhost:26657/consensus_state | jq )
+echo &(DCLD_BIN_NEW status)
 
 test_divider
 echo "Consensus failure patch test passed"
