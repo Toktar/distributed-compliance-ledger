@@ -28,7 +28,6 @@ chmod ugo+x dcld_$binary_version_new
 
 DCLD_BIN_OLD="./dcld_$binary_version_old"
 DCLD_BIN_NEW="./dcld_$binary_version_new"  # Path to locally built dcld v1.4.5
-echo $($DCLD_BIN_NEW version)
 
 check_pool_accepts_tx() {
   # Generate random test data for transaction
@@ -45,9 +44,7 @@ check_pool_accepts_tx() {
     --companyPreferredName="$company_preferred_name" \
     --vendorLandingPageURL="$vendor_landing_page_url" \
     --from=$vendor_account --yes || true)
-  echo $tx_result
   result=$(get_txn_result "$tx_result")
-  echo $result
   if $(_check_response "$result" "\"code\": 0" ); then
     return 0
   else
@@ -59,7 +56,7 @@ check_pool_accepts_tx() {
 test_divider
 if ! check_pool_accepts_tx; then
   echo "FAIL: Pool does NOT accept transactions"
-  #exit 1
+  exit 1
 fi
 
 echo "Add NodeAdmin profile and approve with trustees"
@@ -71,7 +68,6 @@ nodeadmin_pubkey=$(echo $passphrase | $DCLD_BIN_OLD keys show $nodeadmin_account
 
 result=$(echo $passphrase | $DCLD_BIN_OLD tx auth propose-add-account --address="$nodeadmin_address" --pubkey="$nodeadmin_pubkey" --roles="NodeAdmin" --from $trustee_account_1 --yes)
 result=$(get_txn_result "$result")
-echo "$result"
 check_response "$result" "\"code\": 0"
 
 for trustee in $trustee_account_2 $trustee_account_3 $trustee_account_4 $trustee_account_5; do
@@ -92,10 +88,9 @@ result=$(echo $passphrase | $DCLD_BIN_OLD  tx validator add-node --pubkey="$node
 
 test_divider
 
-# echo "Check that pool stopped accepting tx (simulate by sending tx and expecting failure)"
 if check_pool_accepts_tx; then
   echo "FAIL: Pool still accepts transactions, test failed"
-  #exit 1
+  exit 1
 else
   echo "Pool stopped accepting transactions as expected"
 fi
@@ -108,7 +103,7 @@ for i in $(seq 0 $((node_count-1))); do
   log=$(docker logs $name 2>&1 | grep "CONSENSUS FAILURE" | grep "failed to apply block" || true)
   if [[ -z "$log" ]]; then
     echo "FAIL: CONSENSUS FAILURE not found in $name logs"
-    #exit 1
+    exit 1
   fi
   echo "$name log: $log"
 done
@@ -124,43 +119,16 @@ for i in $(seq 0 $((node_count-1))); do
   name="node$i"
   echo "Rollback for $name"
 
-  echo $($DCLD_BIN_NEW version)
-  docker cp $DCLD_BIN_NEW $name:/var/lib/dcld
-
-  # docker exec "$name" mkdir -p /var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5/bin
   docker cp $DCLD_BIN_NEW $name:/var/lib/dcl/.dcl/cosmovisor/upgrades/v1.4.4/bin/dcld
-  # docker exec "$name" rm /var/lib/dcl/.dcl/cosmovisor/current
-  # docker exec "$name" ln -s /var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5 /var/lib/dcl/.dcl/cosmovisor/current
-
   docker stop $name
   result=$($DCLD_BIN_NEW rollback --hard --home ./.localnet/$name)
   echo "$result"
   docker start $name
-
-  echo $(docker exec $name /var/lib/dcl/.dcl/cosmovisor/current status)
-  echo $(docker exec $name ls -la /var/lib/dcl/.dcl/cosmovisor/)
-  echo $(docker exec $name dcld version)
-  echo $(docker exec $name /var/lib/dcl/.dcl/cosmovisor/current/bin/dcld version)
-
-  
 done
 
 sleep 5
 
 test_divider
-
-echo "Check logs for CONSENSUS FAILURE"
-for i in $(seq 0 $((node_count-1))); do
-  name="node$i"
-  log=$(docker logs $name 2>&1 | grep "CONSENSUS FAILURE" | grep "failed to apply block" || true)
-  if [[ -z "$log" ]]; then
-    echo "FAIL: CONSENSUS FAILURE not found in $name logs"
-    #exit 1
-  fi
-  echo "$name log: $log"
-done
-
-
 
 echo "Check that pool accepts transactions again"
 if check_pool_accepts_tx "$DCLD_BIN_NEW"; then
@@ -168,21 +136,14 @@ if check_pool_accepts_tx "$DCLD_BIN_NEW"; then
 else
   echo "FAIL: Pool does NOT accept transactions after upgrade, test failed"
   echo $($DCLD_BIN_NEW status)
-  echo "node1"
-  echo $(docker logs -n 300 node1)
-  echo "node0"
-  echo $(docker logs -n 300 node0)
- # exit 1
+  exit 1
 fi
 
 test_divider
 
 echo "Rollback and upgrade the last node"
 
-# docker exec "$container" mkdir -p /var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5/bin
 docker cp $DCLD_BIN_NEW $container:/var/lib/dcl/.dcl/cosmovisor/upgrades/v1.4.4/bin/dcld
-# docker exec "$container" rm /var/lib/dcl/.dcl/cosmovisor/current
-# docker exec "$container" ln -s /var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5 /var/lib/dcl/.dcl/cosmovisor/current
 docker exec $container pkill cosmovisor
 docker exec $container dcld rollback --hard
 docker exec -d $container cosmovisor run start
@@ -193,20 +154,8 @@ if (( container_height > broken_height )); then
   echo "Node started successfully after rollback and upgrade"
 else
   echo "FAIL: Node failed to start after rollback and upgrade"
-  # exit 1
+  exit 1
 fi
-
-echo "Check logs for executed block"
-  name="node1"
-  log=$(docker logs $name 2>&1 | grep "executed block" || true)
-  if [[ -z "$log" ]]; then
-    echo "FAIL: executed block not found in $name logs"
-    #exit 1
-  fi
-  echo "$name log: $log"
-
-echo $(curl http://localhost:26657/consensus_state | jq )
-echo $(docker logs --tail 200 "node1")
 
 test_divider
 echo "Consensus failure patch test passed"
