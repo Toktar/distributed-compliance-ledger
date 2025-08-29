@@ -127,10 +127,10 @@ for i in $(seq 0 $((node_count-1))); do
   echo $($DCLD_BIN_NEW version)
   docker cp $DCLD_BIN_NEW $name:/var/lib/dcld
 
-  docker exec "$name" mkdir -p /var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5/bin
-  docker cp $DCLD_BIN_NEW $name:/var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5/bin/dcld
-  docker exec "$name" rm /var/lib/dcl/.dcl/cosmovisor/current
-  docker exec "$name" ln -s /var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5 /var/lib/dcl/.dcl/cosmovisor/current
+  # docker exec "$name" mkdir -p /var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5/bin
+  docker cp $DCLD_BIN_NEW $name:/var/lib/dcl/.dcl/cosmovisor/updates/v1.4.4/bin/dcld
+  # docker exec "$name" rm /var/lib/dcl/.dcl/cosmovisor/current
+  # docker exec "$name" ln -s /var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5 /var/lib/dcl/.dcl/cosmovisor/current
 
   docker stop $name
   result=$($DCLD_BIN_NEW rollback --hard --home ./.localnet/$name)
@@ -179,10 +179,10 @@ test_divider
 
 echo "Rollback and upgrade the last node"
 
-docker exec "$container" mkdir -p /var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5/bin
-docker cp $DCLD_BIN_NEW $container:/var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5/bin/dcld
-docker exec "$container" rm /var/lib/dcl/.dcl/cosmovisor/current
-docker exec "$container" ln -s /var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5 /var/lib/dcl/.dcl/cosmovisor/current
+# docker exec "$container" mkdir -p /var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5/bin
+docker cp $DCLD_BIN_NEW $container:/var/lib/dcl/.dcl/cosmovisor/updates/v1.4.4/bin/dcld
+# docker exec "$container" rm /var/lib/dcl/.dcl/cosmovisor/current
+# docker exec "$container" ln -s /var/lib/dcl/.dcl/cosmovisor/patches/v1.4.5 /var/lib/dcl/.dcl/cosmovisor/current
 docker exec $container pkill cosmovisor
 docker exec $container dcld rollback --hard
 docker exec -d $container cosmovisor run start
