@@ -149,27 +149,18 @@ sleep 5
 
 test_divider
 
-echo "Check logs for num_invalid_txs=1"
+echo "Check logs for CONSENSUS FAILURE"
 for i in $(seq 0 $((node_count-1))); do
   name="node$i"
-  log=$(docker logs $name 2>&1 | grep "num_invalid_txs" || true)
+  log=$(docker logs $name 2>&1 | grep "CONSENSUS FAILURE" | grep "failed to apply block" || true)
   if [[ -z "$log" ]]; then
-    echo "FAIL: num_invalid_txs not found in $name logs"
+    echo "FAIL: CONSENSUS FAILURE not found in $name logs"
     #exit 1
   fi
   echo "$name log: $log"
 done
 
-echo "Check logs for software-version"
-for i in $(seq 0 $((node_count-1))); do
-  name="node$i"
-  log=$(docker logs $name 2>&1 | grep "software-version" || true)
-  if [[ -z "$log" ]]; then
-    echo "FAIL: software-version not found in $name logs"
-    #exit 1
-  fi
-  echo "$name log: $log"
-done
+
 
 echo "Check that pool accepts transactions again"
 if check_pool_accepts_tx "$DCLD_BIN_NEW"; then
@@ -201,5 +192,15 @@ else
   echo "FAIL: Node failed to start after rollback and upgrade"
   # exit 1
 fi
+
+echo "Check logs for executed block"
+  name="node1"
+  log=$(docker logs $name 2>&1 | grep "executed block" || true)
+  if [[ -z "$log" ]]; then
+    echo "FAIL: executed block not found in $name logs"
+    #exit 1
+  fi
+  echo "$name log: $log"
+
 test_divider
 echo "Consensus failure patch test passed"
