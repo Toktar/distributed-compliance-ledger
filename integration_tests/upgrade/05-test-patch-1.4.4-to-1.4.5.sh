@@ -206,7 +206,7 @@ echo "Check logs for executed block"
   echo "$name log: $log"
 
 echo $(curl http://localhost:26657/consensus_state | jq )
-echo &(DCLD_BIN_NEW status)
+echo $(docker logs --tail 200 "node1")
 
 test_divider
 echo "Consensus failure patch test passed"
