@@ -8811,10 +8811,10 @@ paths:
                       format: int64
                     commissioningFallbackUrl:
                       type: string
-                    factoryResetStepsHint:
+                    icdUserActiveModeTriggerHint:
                       type: integer
                       format: int64
-                    factoryResetStepsInstruction:
+                    icdUserActiveModeTriggerInstruction:
                       type: string
               pagination:
                 type: object
@@ -9060,10 +9060,10 @@ paths:
                     format: int64
                   commissioningFallbackUrl:
                     type: string
-                  factoryResetStepsHint:
+                  icdUserActiveModeTriggerHint:
                     type: integer
                     format: int64
-                  factoryResetStepsInstruction:
+                  icdUserActiveModeTriggerInstruction:
                     type: string
         default:
           description: An unexpected error response.
@@ -23536,10 +23536,10 @@ definitions:
         format: int64
       commissioningFallbackUrl:
         type: string
-      factoryResetStepsHint:
+      icdUserActiveModeTriggerHint:
         type: integer
         format: int64
-      factoryResetStepsInstruction:
+      icdUserActiveModeTriggerInstruction:
         type: string
   zigbeealliance.distributedcomplianceledger.model.ModelVersion:
     type: object
@@ -23692,10 +23692,10 @@ definitions:
               format: int64
             commissioningFallbackUrl:
               type: string
-            factoryResetStepsHint:
+            icdUserActiveModeTriggerHint:
               type: integer
               format: int64
-            factoryResetStepsInstruction:
+            icdUserActiveModeTriggerInstruction:
               type: string
       pagination:
         type: object
@@ -23795,10 +23795,10 @@ definitions:
             format: int64
           commissioningFallbackUrl:
             type: string
-          factoryResetStepsHint:
+          icdUserActiveModeTriggerHint:
             type: integer
             format: int64
-          factoryResetStepsInstruction:
+          icdUserActiveModeTriggerInstruction:
             type: string
   zigbeealliance.distributedcomplianceledger.model.QueryGetModelVersionResponse:
     type: object

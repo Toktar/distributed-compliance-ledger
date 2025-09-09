@@ -33,8 +33,8 @@ func NewMsgCreateModel(
 	commissioningModeInitialStepsInstruction string,
 	commissioningModeSecondaryStepsHint uint32,
 	commissioningModeSecondaryStepsInstruction string,
-	factoryResetStepsHint uint32,
-	factoryResetStepsInstruction string,
+	icdUserActiveModeTriggerHint uint32,
+	icdUserActiveModeTriggerInstruction string,
 	userManualURL string,
 	supportURL string,
 	productURL string,
@@ -63,8 +63,8 @@ func NewMsgCreateModel(
 		CommissioningModeInitialStepsInstruction: commissioningModeInitialStepsInstruction,
 		CommissioningModeSecondaryStepsHint:      commissioningModeSecondaryStepsHint,
 		CommissioningModeSecondaryStepsInstruction: commissioningModeSecondaryStepsInstruction,
-		FactoryResetStepsHint:                      factoryResetStepsHint,
-		FactoryResetStepsInstruction:               factoryResetStepsInstruction,
+		IcdUserActiveModeTriggerHint:               icdUserActiveModeTriggerHint,
+		IcdUserActiveModeTriggerInstruction:        icdUserActiveModeTriggerInstruction,
 		UserManualUrl:                              userManualURL,
 		SupportUrl:                                 supportURL,
 		ProductUrl:                                 productURL,
@@ -151,8 +151,8 @@ func NewMsgUpdateModel(
 	maintenanceURL string,
 	commissioningFallbackURL string,
 	commissioningModeSecondaryStepsHint uint32,
-	factoryResetStepsHint uint32,
-	factoryResetStepsInstruction string,
+	icdUserActiveModeTriggerHint uint32,
+	icdUserActiveModeTriggerInstruction string,
 
 ) *MsgUpdateModel {
 	return &MsgUpdateModel{
@@ -180,8 +180,8 @@ func NewMsgUpdateModel(
 		SchemaVersion:                       schemaVersion,
 		CommissioningFallbackUrl:            commissioningFallbackURL,
 		CommissioningModeSecondaryStepsHint: commissioningModeSecondaryStepsHint,
-		FactoryResetStepsHint:               factoryResetStepsHint,
-		FactoryResetStepsInstruction:        factoryResetStepsInstruction,
+		IcdUserActiveModeTriggerHint:        icdUserActiveModeTriggerHint,
+		IcdUserActiveModeTriggerInstruction: icdUserActiveModeTriggerInstruction,
 	}
 }
 

@@ -226,9 +226,9 @@ func TestMsgCreateModel_ValidateBasic(t *testing.T) {
 			err: validator.ErrFieldMaxLengthExceeded,
 		},
 		{
-			name: "FactoryResetStepsInstruction length > 1024",
+			name: "IcdUserActiveModeTriggerInstruction length > 1024",
 			msg: func(msg *MsgCreateModel) *MsgCreateModel {
-				msg.FactoryResetStepsInstruction = tmrand.Str(1025)
+				msg.IcdUserActiveModeTriggerInstruction = tmrand.Str(1025)
 
 				return msg
 			}(validMsgCreateModel()),
@@ -779,33 +779,33 @@ func TestMsgCreateModel_ValidateBasic(t *testing.T) {
 			}(validMsgCreateModel()),
 		},
 		{
-			name: "FactoryResetStepsHint == 0",
+			name: "IcdUserActiveModeTriggerHint == 0",
 			msg: func(msg *MsgCreateModel) *MsgCreateModel {
-				msg.FactoryResetStepsHint = 0
+				msg.IcdUserActiveModeTriggerHint = 0
 
 				return msg
 			}(validMsgCreateModel()),
 		},
 		{
-			name: "FactoryResetStepsHint > 0",
+			name: "IcdUserActiveModeTriggerHint > 0",
 			msg: func(msg *MsgCreateModel) *MsgCreateModel {
-				msg.FactoryResetStepsHint = 1
+				msg.IcdUserActiveModeTriggerHint = 1
 
 				return msg
 			}(validMsgCreateModel()),
 		},
 		{
-			name: "FactoryResetStepsInstruction is omitted",
+			name: "IcdUserActiveModeTriggerInstruction is omitted",
 			msg: func(msg *MsgCreateModel) *MsgCreateModel {
-				msg.FactoryResetStepsInstruction = ""
+				msg.IcdUserActiveModeTriggerInstruction = ""
 
 				return msg
 			}(validMsgCreateModel()),
 		},
 		{
-			name: "FactoryResetStepsInstruction length == 1024",
+			name: "IcdUserActiveModeTriggerInstruction length == 1024",
 			msg: func(msg *MsgCreateModel) *MsgCreateModel {
-				msg.FactoryResetStepsInstruction = tmrand.Str(1024)
+				msg.IcdUserActiveModeTriggerInstruction = tmrand.Str(1024)
 
 				return msg
 			}(validMsgCreateModel()),
@@ -1060,9 +1060,9 @@ func TestMsgUpdateModel_ValidateBasic(t *testing.T) {
 			err: validator.ErrFieldMaxLengthExceeded,
 		},
 		{
-			name: "FactoryResetStepsInstruction length > 1024",
+			name: "IcdUserActiveModeTriggerInstruction length > 1024",
 			msg: func(msg *MsgUpdateModel) *MsgUpdateModel {
-				msg.FactoryResetStepsInstruction = tmrand.Str(1025)
+				msg.IcdUserActiveModeTriggerInstruction = tmrand.Str(1025)
 
 				return msg
 			}(validMsgUpdateModel()),
@@ -1598,17 +1598,17 @@ func TestMsgUpdateModel_ValidateBasic(t *testing.T) {
 			}(validMsgUpdateModel()),
 		},
 		{
-			name: "FactoryResetStepsInstruction is omitted",
+			name: "IcdUserActiveModeTriggerInstruction is omitted",
 			msg: func(msg *MsgUpdateModel) *MsgUpdateModel {
-				msg.FactoryResetStepsInstruction = ""
+				msg.IcdUserActiveModeTriggerInstruction = ""
 
 				return msg
 			}(validMsgUpdateModel()),
 		},
 		{
-			name: "FactoryResetStepsInstruction length == 1024",
+			name: "IcdUserActiveModeTriggerInstruction length == 1024",
 			msg: func(msg *MsgUpdateModel) *MsgUpdateModel {
-				msg.FactoryResetStepsInstruction = tmrand.Str(1024)
+				msg.IcdUserActiveModeTriggerInstruction = tmrand.Str(1024)
 
 				return msg
 			}(validMsgUpdateModel()),
@@ -1894,8 +1894,8 @@ func validMsgCreateModel() *MsgCreateModel {
 		CommissioningModeInitialStepsInstruction: testconstants.CommissioningModeInitialStepsInstruction,
 		CommissioningModeSecondaryStepsHint:      testconstants.CommissioningModeSecondaryStepsHint,
 		CommissioningModeSecondaryStepsInstruction: testconstants.CommissioningModeSecondaryStepsInstruction,
-		FactoryResetStepsHint:                      testconstants.FactoryResetStepsHint,
-		FactoryResetStepsInstruction:               testconstants.FactoryResetStepsInstruction,
+		IcdUserActiveModeTriggerHint:               testconstants.IcdUserActiveModeTriggerHint,
+		IcdUserActiveModeTriggerInstruction:        testconstants.IcdUserActiveModeTriggerInstruction,
 		UserManualUrl:                              testconstants.UserManualURL,
 		SupportUrl:                                 testconstants.SupportURL,
 		ProductUrl:                                 testconstants.ProductURL,
@@ -1920,7 +1920,7 @@ func validMsgUpdateModel() *MsgUpdateModel {
 		CommissioningCustomFlowUrl:               testconstants.CommissioningCustomFlowURL + "/updated",
 		CommissioningModeInitialStepsInstruction: testconstants.CommissioningModeInitialStepsInstruction + "-updated",
 		CommissioningModeSecondaryStepsInstruction: testconstants.CommissioningModeSecondaryStepsInstruction + "-updated",
-		FactoryResetStepsInstruction:               testconstants.FactoryResetStepsInstruction + "-updated",
+		IcdUserActiveModeTriggerInstruction:        testconstants.IcdUserActiveModeTriggerInstruction + "-updated",
 		UserManualUrl:                              testconstants.UserManualURL + "/updated",
 		SupportUrl:                                 testconstants.SupportURL + "/updated",
 		ProductUrl:                                 testconstants.ProductURL + "/updated",

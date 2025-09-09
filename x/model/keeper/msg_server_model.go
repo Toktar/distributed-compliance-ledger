@@ -46,8 +46,8 @@ func (k msgServer) CreateModel(goCtx context.Context, msg *types.MsgCreateModel)
 		CommissioningModeInitialStepsInstruction: msg.CommissioningModeInitialStepsInstruction,
 		CommissioningModeSecondaryStepsHint:      msg.CommissioningModeSecondaryStepsHint,
 		CommissioningModeSecondaryStepsInstruction: msg.CommissioningModeSecondaryStepsInstruction,
-		FactoryResetStepsHint:                      msg.FactoryResetStepsHint,
-		FactoryResetStepsInstruction:               msg.FactoryResetStepsInstruction,
+		IcdUserActiveModeTriggerHint:               msg.IcdUserActiveModeTriggerHint,
+		IcdUserActiveModeTriggerInstruction:        msg.IcdUserActiveModeTriggerInstruction,
 		UserManualUrl:                              msg.UserManualUrl,
 		SupportUrl:                                 msg.SupportUrl,
 		ProductUrl:                                 msg.ProductUrl,
@@ -72,8 +72,8 @@ func (k msgServer) CreateModel(goCtx context.Context, msg *types.MsgCreateModel)
 		model.CommissioningModeSecondaryStepsHint = 1
 	}
 
-	if model.FactoryResetStepsHint == 0 {
-		model.FactoryResetStepsHint = 1
+	if model.IcdUserActiveModeTriggerHint == 0 {
+		model.IcdUserActiveModeTriggerHint = 1
 	}
 
 	if model.EnhancedSetupFlowOptions&1 == 1 {
@@ -148,8 +148,8 @@ func (k msgServer) UpdateModel(goCtx context.Context, msg *types.MsgUpdateModel)
 		model.CommissioningModeSecondaryStepsInstruction = msg.CommissioningModeSecondaryStepsInstruction
 	}
 
-	if msg.FactoryResetStepsInstruction != "" {
-		model.FactoryResetStepsInstruction = msg.FactoryResetStepsInstruction
+	if msg.IcdUserActiveModeTriggerInstruction != "" {
+		model.IcdUserActiveModeTriggerInstruction = msg.IcdUserActiveModeTriggerInstruction
 	}
 
 	if msg.UserManualUrl != "" {
@@ -212,8 +212,8 @@ func (k msgServer) UpdateModel(goCtx context.Context, msg *types.MsgUpdateModel)
 		model.CommissioningModeSecondaryStepsHint = msg.CommissioningModeSecondaryStepsHint
 	}
 
-	if msg.FactoryResetStepsHint != 0 {
-		model.FactoryResetStepsHint = msg.FactoryResetStepsHint
+	if msg.IcdUserActiveModeTriggerHint != 0 {
+		model.IcdUserActiveModeTriggerHint = msg.IcdUserActiveModeTriggerHint
 	}
 
 	// store updated model
