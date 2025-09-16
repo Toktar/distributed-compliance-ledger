@@ -19,6 +19,12 @@ set -euo pipefail
 
 trap 'kill $(jobs -p)' EXIT
 
+TRACE="${TRACE:-}"
+
+if [[ -n "$TRACE" ]]; then
+    set -x
+fi
+
 info_file="$DAEMON_HOME/cosmovisor/upgrade.info"
 upgrade_is_running=0
 

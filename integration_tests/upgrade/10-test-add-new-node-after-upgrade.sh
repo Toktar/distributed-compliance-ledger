@@ -122,7 +122,7 @@ docker rm "$MASTER_UPGRADE_CONTAINER_NAME"
 test_divider
 
 echo "6. Start node \"$NEW_OBSERVER_CONTAINER_NAME\""
-docker exec -d "$NEW_OBSERVER_CONTAINER_NAME" sh -c "/var/lib/dcl/./node_helper.sh | tee /proc/1/fd/1"
+docker exec -d "$NEW_OBSERVER_CONTAINER_NAME" sh -c '/var/lib/dcl/./node_helper.sh 2>&1 | tee /proc/1/fd/1'
 docker logs -f "$NEW_OBSERVER_CONTAINER_NAME" &
 
 test_divider
@@ -136,6 +136,7 @@ check_expected_version_for_interval "$DCLD_VERSION_OLD" || {
 
 test_divider
 
+export TRACE=1 # FIXME
 overall_ping_time_sec=900
 
 echo "8. Check node \"$NEW_OBSERVER_CONTAINER_NAME\" for START catching up process pinging it every second for $overall_ping_time_sec seconds"

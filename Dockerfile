@@ -61,6 +61,8 @@ ENV DAEMON_NAME=dcld
 ENV DAEMON_ALLOW_DOWNLOAD_BINARIES=true
 ENV COSMOVISOR_CUSTOM_PREUPGRADE=cosmovisor_preupgrade.sh
 ENV GOCOVERDIR=/var/lib/${TEST_USER}/.dcl/gocover
+# FIXME
+ENV TRACE=1
 
 RUN apt-get update
 RUN apt-get install -y ca-certificates

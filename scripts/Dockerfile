@@ -32,5 +32,7 @@ RUN curl -L https://github.com/ignite/cli/releases/download/v0.27.2/ignite_0.27.
 
 ENV PATH="/root/go/bin:${PATH}"
 ENV PATH="${PATH}:/usr/local/bin"
+# FIXME
+ENV TRACE=1
 
 WORKDIR /dcl

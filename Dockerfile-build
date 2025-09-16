@@ -33,6 +33,8 @@ RUN rm "/tmp/go${GO_VERSION}.linux-amd64.tar.gz"
 ENV GOPATH=/go
 ENV PATH=$GOPATH/bin:/usr/local/go/bin:$PATH
 RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
+# FIXME
+ENV TRACE=1
 
 WORKDIR /go/src/dc-ledger
 COPY app ./app/

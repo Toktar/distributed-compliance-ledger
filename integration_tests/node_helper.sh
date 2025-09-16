@@ -17,6 +17,12 @@
 
 set -euo pipefail
 
+TRACE="${TRACE:-}"
+
+if [[ -n "$TRACE" ]]; then
+    set -x
+fi
+
 timestamp=0
 max_restart_cnt=10
 restart_cnt=0

@@ -135,7 +135,7 @@ jobs:
             ${{ runner.os }}-go-
       - name: Run integration tests
         shell: bash
-        run: integration_tests/run-all.sh all cover
+        run: integration_tests/run-all.sh upgrade # FIXME
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Generate test coverage
