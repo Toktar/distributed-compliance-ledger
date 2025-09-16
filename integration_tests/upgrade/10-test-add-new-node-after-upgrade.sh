@@ -55,6 +55,8 @@ function check_expected_catching_up_status_for_interval {
         if [[ $(docker exec --user root "$NEW_OBSERVER_CONTAINER_NAME" dcld status 2>&1) == *"$status_substring"* ]]; then
             return 0
         fi
+        echo "!!!!"
+        echo $(docker exec --user root "$NEW_OBSERVER_CONTAINER_NAME" dcld status)
     done
 
     return 1
