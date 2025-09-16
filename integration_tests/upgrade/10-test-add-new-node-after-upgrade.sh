@@ -55,8 +55,6 @@ function check_expected_catching_up_status_for_interval {
         if [[ $(docker exec --user root "$NEW_OBSERVER_CONTAINER_NAME" dcld status 2>&1) == *"$status_substring"* ]]; then
             return 0
         fi
-        echo "!!!!"
-        echo $(docker exec --user root "$NEW_OBSERVER_CONTAINER_NAME" dcld status)
     done
 
     return 1
@@ -153,6 +151,9 @@ echo "9. Check node \"$NEW_OBSERVER_CONTAINER_NAME\" for FINISH catching up proc
 
 check_expected_catching_up_status_for_interval false $overall_ping_time_sec || {
     echo "Catch-up procedure does not finished"
+    docker container inspect "$NEW_OBSERVER_CONTAINER_NAME"  --format='{{.State.ExitCode}}'
+    docker logs "$NEW_OBSERVER_CONTAINER_NAME" | grep "ERR"
+    docker logs  --tail 100 -f "$NEW_OBSERVER_CONTAINER_NAME"
     exit 1
 }
 
