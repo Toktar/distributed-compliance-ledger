@@ -75,6 +75,9 @@ function check_expected_version_for_interval {
 
         if ! docker container inspect "$NEW_OBSERVER_CONTAINER_NAME" | grep -q '"Status": "running"'; then
             continue
+        else
+            docker logs "$NEW_OBSERVER_CONTAINER_NAME" | grep "ERR"
+            docker logs  --tail 5 -f "$NEW_OBSERVER_CONTAINER_NAME"
         fi
 
         if [ $(docker exec "$NEW_OBSERVER_CONTAINER_NAME" dcld version 2>&1) == "$expected_version" ]; then
