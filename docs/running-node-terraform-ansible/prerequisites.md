@@ -26,7 +26,7 @@ The binary be get as follows:
 PRODUCT=terraform VERSION=1.5.7 OS_ARCH=linux_amd64 curl --remote-name https://releases.hashicorp.com/"${PRODUCT}"/"${VERSION}"/"${PRODUCT}"_"${VERSION}"_"${OS_ARCH}".zip
 ```
 
-Please consider to do checksum and sugnature verification like described [here](https://developer.hashicorp.com/well-architected-framework/verify-hashicorp-binary?page=operational-excellence&page=verify-hashicorp-binary)
+Please consider to do checksum and signature verification like described [here](https://developer.hashicorp.com/well-architected-framework/verify-hashicorp-binary?page=operational-excellence&page=verify-hashicorp-binary)
 and put the binary into the directory in your `$PATH`.
 
 In case you want to try other installation options and/or Terraform CLI version you may follow

@@ -125,12 +125,6 @@ Please see also Terraform [docs](https://developer.hashicorp.com/terraform/langu
 
 By default GCP infrastructure backend is set as `gcs` (see [`deployment/terraform/gcp/backend.tf`](../../deployment/terraform/gcp/backend.tf)).
 
-S3 backend configuration implies:
-
-*   existent S3 bucket
-*   (optional but recommended) DynamoDB table to support [remote state locking](https://developer.hashicorp.com/terraform/language/v1.5.x/state/locking)
-    *   **_Note_** The table must have a partition key named `LockID` with a type of `String`.
-
 To complete the configuration please specify:
 
 *   Cloud Storage bucket name
@@ -182,7 +176,7 @@ Please see also Terraform [docs](https://developer.hashicorp.com/terraform/langu
 
 Deployment configuration for each of the supported clouds includes common set of parameters:
 
-*   common parameters (regions / locations, tags, other cloud specific ones)
+*   common parameters (regions / locations, tags, ssh keys, other cloud specific ones)
 *   validator parameteres
 *   private sentries parameteres
 *   public sentries parameteres
@@ -265,6 +259,16 @@ common_labels= {
 }
 ```
 </details>
+
+**SSH keys**
+
+SSH keys are needed for deployment purposes. They also might be used for some administrative purposes in case direct access is required.
+
+You may use an existend keys pair or generate as follows:
+
+```bash
+ssh-keygen -t rsa -b 4096 -o -a 100 -C "your_email@example.com"
+```
 
 **Cloud specific parameters**
 
@@ -541,7 +545,7 @@ prometheus_config = {
 #### 1.2.1 Initialize terraform
 
 ```bash
-cd deployment/terraform/aws
+cd deployment/terraform/<cloud-directory> # aws or gcp or azure
 
 terraform init -backend-config=<backend-config-file> # in case backend configuration is in a file
 ```
@@ -554,7 +558,9 @@ where `<backend-config-file>` is the backend configuration file ([AWS S3 backend
 terraform workspace select -or-create=true <workspace-name>
 ```
 
-where `<workspace-name>` is the name of the Terraform workspace (e.g. `prod` or `issue-123`).
+where `<workspace-name>` is the name of the Terraform workspace (e.g. `feature-A` or `issue-123`).
+
+Please see Terraform [use cases](https://developer.hashicorp.com/terraform/cli/workspaces#use-cases) for workspaces.
 
 #### 1.2.2 Run terraform
 
