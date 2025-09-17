@@ -37,6 +37,8 @@ DCLD_BIN_NEW="/tmp/dcld_bins/dcld_master"
 function check_expected_catching_up_status_for_interval {
     local expected_status="$1"
     local overall_ping_time_sec="${2:-100}"
+    local process_alive="${3:-}"
+
     local seconds=0
     local status_substring="\"catching_up\":$expected_status"
 
@@ -54,6 +56,13 @@ function check_expected_catching_up_status_for_interval {
 
         if [[ $(docker exec --user root "$NEW_OBSERVER_CONTAINER_NAME" dcld status 2>&1) == *"$status_substring"* ]]; then
             return 0
+        fi
+
+        if [[ -n "$process_alive" ]]; then
+            if ! docker exec "$NEW_OBSERVER_CONTAINER_NAME" ps -A | grep -q "$process_alive"; then
+                echo "error: process $process_alive is not found"
+                return 1
+            fi
         fi
     done
 
@@ -141,7 +150,7 @@ overall_ping_time_sec=900
 
 echo "8. Check node \"$NEW_OBSERVER_CONTAINER_NAME\" for START catching up process pinging it every second for $overall_ping_time_sec seconds"
 
-check_expected_catching_up_status_for_interval true $overall_ping_time_sec || {
+check_expected_catching_up_status_for_interval true $overall_ping_time_sec node_helper || {
     echo "Catch-up procedure does not started"
     exit 1
 }
@@ -150,7 +159,7 @@ test_divider
 
 echo "9. Check node \"$NEW_OBSERVER_CONTAINER_NAME\" for FINISH catching up process pinging it every second for $overall_ping_time_sec seconds"
 
-check_expected_catching_up_status_for_interval false $overall_ping_time_sec || {
+check_expected_catching_up_status_for_interval false $overall_ping_time_sec node_helper || {
     echo "Catch-up procedure does not finished"
     exit 1
 }
