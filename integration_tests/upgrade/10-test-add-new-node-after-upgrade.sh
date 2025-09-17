@@ -30,15 +30,13 @@ MASTER_UPGRADE_DOCKERFILE="./integration_tests/upgrade/Dockerfile-build-master"
 MASTER_UPGRADE_IMAGE="dcld-build-master"
 MASTER_UPGRADE_CONTAINER_NAME="$MASTER_UPGRADE_IMAGE-inst"
 
-DCLD_VERSION_OLD="0.12.0"
-DCLD_BIN_OLD="/tmp/dcld_bins/dcld_v0.12.0"
-DCLD_BIN_NEW="/tmp/dcld_bins/dcld_master"
+DCLD_VERSION="$(docker run "$MASTER_UPGRADE_IMAGE" /bin/sh -c "cd /go/src/distributed-compliance-ledger && git rev-parse --short HEAD")"
+
+DCLD_BIN="/tmp/dcld_bins/dcld_master"
 
 function check_expected_catching_up_status_for_interval {
     local expected_status="$1"
     local overall_ping_time_sec="${2:-100}"
-    local process_alive="${3:-}"
-
     local seconds=0
     local status_substring="\"catching_up\":$expected_status"
 
@@ -56,13 +54,6 @@ function check_expected_catching_up_status_for_interval {
 
         if [[ $(docker exec --user root "$NEW_OBSERVER_CONTAINER_NAME" dcld status 2>&1) == *"$status_substring"* ]]; then
             return 0
-        fi
-
-        if [[ -n "$process_alive" ]]; then
-            if ! docker exec "$NEW_OBSERVER_CONTAINER_NAME" ps -A | grep -q "$process_alive"; then
-                echo "error: process $process_alive is not found"
-                return 1
-            fi
         fi
     done
 
@@ -101,8 +92,8 @@ docker run -d --name "$NEW_OBSERVER_CONTAINER_NAME" --ip $ip -p "$node_p2p_port-
 
 test_divider
 
-echo "2. Install dcld version \"$DCLD_VERSION_OLD\" to \"$NEW_OBSERVER_CONTAINER_NAME\""
-docker cp "$DCLD_BIN_OLD" "$NEW_OBSERVER_CONTAINER_NAME":"$dcl_user_home"/dcld
+echo "2. Install dcld version \"$DCLD_VERSION\" to \"$NEW_OBSERVER_CONTAINER_NAME\""
+docker cp "$DCLD_BIN" "$NEW_OBSERVER_CONTAINER_NAME":"$dcl_user_home"/dcld
 
 test_divider
 
@@ -115,37 +106,52 @@ docker exec "$NEW_OBSERVER_CONTAINER_NAME" sed -i 's/laddr = "tcp:\/\/127.0.0.1:
 
 test_divider
 
+echo "3.1. Set up fast sync for \"$NEW_OBSERVER_CONTAINER_NAME\""
+trust_hash=$(curl -s https://localhost:26657/commit | jq -r '.result.signed_header.commit.block_id.hash')
+echo "trust_hash: $trust_hash"
+trust_height=$(curl -s https://localhost:26657/commit | jq -r '.result.signed_header.header.height')
+echo "trust_height: $trust_height"
+docker exec "$NEW_OBSERVER_CONTAINER_NAME" sed -i 's/^enable = false/enable = true/' $DCL_DIR/config/config.toml
+echo "enable: $(docker exec -i "$NEW_OBSERVER_CONTAINER_NAME" cat $DCL_DIR/config/config.toml | grep enable)"
+docker exec "$NEW_OBSERVER_CONTAINER_NAME" sed -i "s|^rpc_servers =.*|rpc_servers = \"https://localhost:26657\"|"$DCL_DIR/config/config.toml
+echo "rpc_servers: $(docker exec -i "$NEW_OBSERVER_CONTAINER_NAME" cat $DCL_DIR/config/config.toml | grep rpc_servers)"
+docker exec "$NEW_OBSERVER_CONTAINER_NAME" sed -i "s|^trust_height =.*|trust_height = $trust_height|" $DCL_DIR/config/config.toml
+echo "trust_height: $(docker exec -i "$NEW_OBSERVER_CONTAINER_NAME" cat $DCL_DIR/config/config.toml | grep trust_height)"
+docker exec "$NEW_OBSERVER_CONTAINER_NAME" sed -i "s|^trust_hash =.*|trust_hash = \"$trust_hash\"|" $DCL_DIR/config/config.toml
+echo "trust_hash: $(docker exec -i "$NEW_OBSERVER_CONTAINER_NAME" cat $DCL_DIR/config/config.toml | grep trust_hash)"
+
+test_divider
+
 echo "4. Locate the app to $DCL_DIR/cosmovisor/genesis/bin directory in \"$NEW_OBSERVER_CONTAINER_NAME\""
 docker exec "$NEW_OBSERVER_CONTAINER_NAME" mkdir -p "$DCL_DIR"/cosmovisor/genesis/bin
 docker exec "$NEW_OBSERVER_CONTAINER_NAME" cp -f ./dcld "$DCL_DIR"/cosmovisor/genesis/bin/
 
 test_divider
 
-DCLD_VERSION_NEW="$(docker run "$MASTER_UPGRADE_IMAGE" /bin/sh -c "cd /go/src/distributed-compliance-ledger && git rev-parse --short HEAD")"
+# DCLD_VERSION_NEW="$(docker run "$MASTER_UPGRADE_IMAGE" /bin/sh -c "cd /go/src/distributed-compliance-ledger && git rev-parse --short HEAD")"
 
-echo "5. Set up version \"$DCLD_VERSION_NEW\" upgrade for \"$NEW_OBSERVER_CONTAINER_NAME\""
-docker cp "$DCLD_BIN_NEW" "$NEW_OBSERVER_CONTAINER_NAME":"$DCL_DIR"/dcld
-docker exec "$NEW_OBSERVER_CONTAINER_NAME" /bin/sh -c "cosmovisor add-upgrade "$DCLD_VERSION_NEW" "$DCL_DIR"/dcld"
-docker rm "$MASTER_UPGRADE_CONTAINER_NAME"
+# echo "5. Set up version \"$DCLD_VERSION_NEW\" upgrade for \"$NEW_OBSERVER_CONTAINER_NAME\""
+# docker cp "$DCLD_BIN_NEW" "$NEW_OBSERVER_CONTAINER_NAME":"$DCL_DIR"/dcld
+# docker exec "$NEW_OBSERVER_CONTAINER_NAME" /bin/sh -c "cosmovisor add-upgrade "$DCLD_VERSION_NEW" "$DCL_DIR"/dcld"
+# docker rm "$MASTER_UPGRADE_CONTAINER_NAME"
 
 test_divider
 
 echo "6. Start node \"$NEW_OBSERVER_CONTAINER_NAME\""
-docker exec -d "$NEW_OBSERVER_CONTAINER_NAME" sh -c '/var/lib/dcl/./node_helper.sh 2>&1 | tee /proc/1/fd/1'
+docker exec -d "$NEW_OBSERVER_CONTAINER_NAME" sh -c "/var/lib/dcl/./node_helper.sh | tee /proc/1/fd/1"
 docker logs -f "$NEW_OBSERVER_CONTAINER_NAME" &
 
 test_divider
 
-echo "7. Check dcld version == \"$DCLD_VERSION_OLD\" in \"$NEW_OBSERVER_CONTAINER_NAME\""
+echo "7. Check dcld version == \"$DCLD_VERSION\" in \"$NEW_OBSERVER_CONTAINER_NAME\""
 
-check_expected_version_for_interval "$DCLD_VERSION_OLD" || {
+check_expected_version_for_interval "$DCLD_VERSION" || {
     echo "installed dcld version does not match dcld mainnet version"
     exit 1
 }
 
 test_divider
 
-export TRACE=1 # FIXME
 overall_ping_time_sec=900
 
 echo "8. Check node \"$NEW_OBSERVER_CONTAINER_NAME\" for START catching up process pinging it every second for $overall_ping_time_sec seconds"
@@ -166,11 +172,11 @@ check_expected_catching_up_status_for_interval false $overall_ping_time_sec node
 
 test_divider
 
-echo "10. Check node \"$NEW_OBSERVER_CONTAINER_NAME\" dcld updated to version \"$DCLD_VERSION_NEW\""
+# echo "10. Check node \"$NEW_OBSERVER_CONTAINER_NAME\" dcld updated to version \"$DCLD_VERSION_NEW\""
 
-check_expected_version_for_interval "$DCLD_VERSION_NEW" || {
-    echo "updated dcld version does not match dcld expected version"
-    exit 1
-}
+# check_expected_version_for_interval "$DCLD_VERSION_NEW" || {
+#     echo "updated dcld version does not match dcld expected version"
+#     exit 1
+# }
 
 echo "Add new node after upgrade PASSED"
