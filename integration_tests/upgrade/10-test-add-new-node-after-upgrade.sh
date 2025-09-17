@@ -30,8 +30,8 @@ MASTER_UPGRADE_DOCKERFILE="./integration_tests/upgrade/Dockerfile-build-master"
 MASTER_UPGRADE_IMAGE="dcld-build-master"
 MASTER_UPGRADE_CONTAINER_NAME="$MASTER_UPGRADE_IMAGE-inst"
 
-DCLD_VERSION_OLD="0.12.0"
-DCLD_BIN_OLD="/tmp/dcld_bins/dcld_v0.12.0"
+DCLD_VERSION_OLD="1.5.0"
+DCLD_BIN_OLD="/tmp/dcld_bins/dcld_v1.5.0-0.dev.5"
 DCLD_BIN_NEW="/tmp/dcld_bins/dcld_master"
 
 function check_expected_catching_up_status_for_interval {
@@ -106,6 +106,16 @@ docker cp "$localnet_dir/node0/config/genesis.json" $NEW_OBSERVER_CONTAINER_NAME
 peers="$(cat "$localnet_dir/node0/config/config.toml" | grep -o -E "persistent_peers = \".*\"")"
 docker exec "$NEW_OBSERVER_CONTAINER_NAME" sed -i "s/persistent_peers = \"\"/$peers/g" $DCL_DIR/config/config.toml
 docker exec "$NEW_OBSERVER_CONTAINER_NAME" sed -i 's/laddr = "tcp:\/\/127.0.0.1:26657"/laddr = "tcp:\/\/0.0.0.0:26657"/g' $DCL_DIR/config/config.toml
+
+test_divider
+
+# echo "3.1. Set up fast sync for \"$NEW_OBSERVER_CONTAINER_NAME\""
+# trust_hash=$(curl -s https://localhost:26657/commit | jq -r '.result.signed_header.commit.block_id.hash')
+# trust_height=$(curl -s https://localhost:26657/commit | jq -r '.result.signed_header.header.height')
+# docker exec "$NEW_OBSERVER_CONTAINER_NAME" sed -i 's/^enable = false/enable = true/' $DCL_DIR/config/config.toml
+# docker exec "$NEW_OBSERVER_CONTAINER_NAME" sed -i "s|^rpc_servers =.*|rpc_servers = \"https://localhost:26657\"|"$DCL_DIR/config/config.toml
+# docker exec "$NEW_OBSERVER_CONTAINER_NAME" sed -i "s|^trust_height =.*|trust_height = $trust_height|" $DCL_DIR/config/config.toml
+# docker exec "$NEW_OBSERVER_CONTAINER_NAME" sed -i "s|^trust_hash =.*|trust_hash = \"$trust_hash\"|" $DCL_DIR/config/config.toml
 
 test_divider
 
