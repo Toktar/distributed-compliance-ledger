@@ -177,6 +177,9 @@ for node_name in node0 node1 node2 node3 observer0; do
         sed -i $SED_EXT 's/address = "tcp:\/\/localhost:1317"/address = "tcp:\/\/0.0.0.0:1317"/g' "$LOCALNET_DIR/${node_name}/config/app.toml"
         # Make gRPC endpoints available externally
         sed -i $SED_EXT 's/address = "localhost:9090"/address = "0.0.0.0:9090"/g' "$LOCALNET_DIR/${node_name}/config/app.toml"
+        # Enable fast sync
+        sed -i $SED_EXT 's/snapshot-interval = .*/snapshot-interval = 100/g' "$LOCALNET_DIR/${node_name}/config/app.toml"
+        sed -i $SED_EXT 's/snapshot-keep-recent = .*/snapshot-keep-recent = 10/g' "$LOCALNET_DIR/${node_name}/config/app.toml"
 
         # sets proper moniker
         sed -i $SED_EXT "s/moniker = .*/moniker = \"$node_name\"/g" "$LOCALNET_DIR/${node_name}/config/config.toml"

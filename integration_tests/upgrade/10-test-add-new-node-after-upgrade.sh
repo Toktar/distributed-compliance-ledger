@@ -37,6 +37,7 @@ DCLD_BIN="/tmp/dcld_bins/dcld_master"
 function check_expected_catching_up_status_for_interval {
     local expected_status="$1"
     local overall_ping_time_sec="${2:-100}"
+    local process_alive="${3:-}"
     local seconds=0
     local status_substring="\"catching_up\":$expected_status"
 
@@ -55,6 +56,12 @@ function check_expected_catching_up_status_for_interval {
         if [[ $(docker exec --user root "$NEW_OBSERVER_CONTAINER_NAME" dcld status 2>&1) == *"$status_substring"* ]]; then
             return 0
         fi
+         if [[ -n "$process_alive" ]]; then
+            if ! docker exec "$NEW_OBSERVER_CONTAINER_NAME" ps -A | grep -q "$process_alive"; then
+                echo "error: process $process_alive is not found"
+                return 1
+            fi
+        fi
     done
 
     return 1
@@ -63,6 +70,7 @@ function check_expected_catching_up_status_for_interval {
 function check_expected_version_for_interval {
     local expected_version="$1"
     local overall_ping_time_sec="${2:-10}"
+    local process_alive="${3:-}"
     local seconds=0
 
     while [ $seconds -lt $overall_ping_time_sec ]; do
@@ -79,6 +87,13 @@ function check_expected_version_for_interval {
 
         if [ $(docker exec "$NEW_OBSERVER_CONTAINER_NAME" dcld version 2>&1) == "$expected_version" ]; then
             return 0
+        fi
+
+        if [[ -n "$process_alive" ]]; then
+            if ! docker exec "$NEW_OBSERVER_CONTAINER_NAME" ps -A | grep -q "$process_alive"; then
+                echo "error: process $process_alive is not found"
+                return 1
+            fi
         fi
     done
 
@@ -104,16 +119,19 @@ peers="$(cat "$localnet_dir/node0/config/config.toml" | grep -o -E "persistent_p
 docker exec "$NEW_OBSERVER_CONTAINER_NAME" sed -i "s/persistent_peers = \"\"/$peers/g" $DCL_DIR/config/config.toml
 docker exec "$NEW_OBSERVER_CONTAINER_NAME" sed -i 's/laddr = "tcp:\/\/127.0.0.1:26657"/laddr = "tcp:\/\/0.0.0.0:26657"/g' $DCL_DIR/config/config.toml
 
-test_divider
+# test_divider
 
 echo "3.1. Set up fast sync for \"$NEW_OBSERVER_CONTAINER_NAME\""
-trust_hash=$(curl -s https://localhost:26657/commit | jq -r '.result.signed_header.commit.block_id.hash')
+get_height trust_height
+trust_height=$(((trust_height / 100) * 100))
+trust_hash=$(curl -s http://localhost:26657/commit?height=$trust_height | jq -r '.result.signed_header.commit.block_id.hash')
 echo "trust_hash: $trust_hash"
-trust_height=$(curl -s https://localhost:26657/commit | jq -r '.result.signed_header.header.height')
 echo "trust_height: $trust_height"
+docker exec node0 ls /var/lib/dcl/.dcl/data/snapshots/
+docker logs node0 | grep snapshot
 docker exec "$NEW_OBSERVER_CONTAINER_NAME" sed -i 's/^enable = false/enable = true/' $DCL_DIR/config/config.toml
 echo "enable: $(docker exec -i "$NEW_OBSERVER_CONTAINER_NAME" cat $DCL_DIR/config/config.toml | grep enable)"
-docker exec "$NEW_OBSERVER_CONTAINER_NAME" sed -i "s|^rpc_servers =.*|rpc_servers = \"https://localhost:26657\"|"$DCL_DIR/config/config.toml
+docker exec "$NEW_OBSERVER_CONTAINER_NAME" sed -i "s|^rpc_servers =.*|rpc_servers = \"http://localhost:26657,http://localhost:26657\"|" $DCL_DIR/config/config.toml
 echo "rpc_servers: $(docker exec -i "$NEW_OBSERVER_CONTAINER_NAME" cat $DCL_DIR/config/config.toml | grep rpc_servers)"
 docker exec "$NEW_OBSERVER_CONTAINER_NAME" sed -i "s|^trust_height =.*|trust_height = $trust_height|" $DCL_DIR/config/config.toml
 echo "trust_height: $(docker exec -i "$NEW_OBSERVER_CONTAINER_NAME" cat $DCL_DIR/config/config.toml | grep trust_height)"
@@ -138,15 +156,15 @@ test_divider
 test_divider
 
 echo "6. Start node \"$NEW_OBSERVER_CONTAINER_NAME\""
-docker exec -d "$NEW_OBSERVER_CONTAINER_NAME" sh -c "/var/lib/dcl/./node_helper.sh | tee /proc/1/fd/1"
+docker exec -d "$NEW_OBSERVER_CONTAINER_NAME" sh -c "/var/lib/dcl/./node_helper.sh >> /proc/1/fd/1 2>&1"
 docker logs -f "$NEW_OBSERVER_CONTAINER_NAME" &
 
 test_divider
 
 echo "7. Check dcld version == \"$DCLD_VERSION\" in \"$NEW_OBSERVER_CONTAINER_NAME\""
 
-check_expected_version_for_interval "$DCLD_VERSION" || {
-    echo "installed dcld version does not match dcld mainnet version"
+check_expected_version_for_interval "$DCLD_VERSION" 10 node_helper || {
+    echo "installed dcld version does not match dcld expected version: $DCLD_VERSION"
     exit 1
 }
 
