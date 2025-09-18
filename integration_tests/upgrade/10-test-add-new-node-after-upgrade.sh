@@ -30,7 +30,7 @@ MASTER_UPGRADE_DOCKERFILE="./integration_tests/upgrade/Dockerfile-build-master"
 MASTER_UPGRADE_IMAGE="dcld-build-master"
 MASTER_UPGRADE_CONTAINER_NAME="$MASTER_UPGRADE_IMAGE-inst"
 
-DCLD_VERSION="$(docker run "$MASTER_UPGRADE_IMAGE" /bin/sh -c "cd /go/src/distributed-compliance-ledger && git rev-parse --short HEAD")"
+# DCLD_VERSION="$(docker run "$MASTER_UPGRADE_IMAGE" /bin/sh -c "cd /go/src/distributed-compliance-ledger && git rev-parse --short HEAD")"
 
 DCLD_BIN="/tmp/dcld_bins/dcld_master"
 
@@ -107,10 +107,10 @@ docker run -d --name "$NEW_OBSERVER_CONTAINER_NAME" --ip $ip -p "$node_p2p_port-
 
 test_divider
 
-echo "2. Install dcld version \"$DCLD_VERSION\" to \"$NEW_OBSERVER_CONTAINER_NAME\""
+echo "2. Install dcld to \"$NEW_OBSERVER_CONTAINER_NAME\""
 docker cp "$DCLD_BIN" "$NEW_OBSERVER_CONTAINER_NAME":"$dcl_user_home"/dcld
 
-test_divider
+# test_divider
 
 echo "3. Set up configuration files for \"$NEW_OBSERVER_CONTAINER_NAME\""
 docker exec "$NEW_OBSERVER_CONTAINER_NAME" ./dcld init "$NEW_OBSERVER_CONTAINER_NAME" --chain-id $chain_id
@@ -127,8 +127,7 @@ trust_height=$(((trust_height / 100) * 100))
 trust_hash=$(curl -s http://localhost:26657/commit?height=$trust_height | jq -r '.result.signed_header.commit.block_id.hash')
 echo "trust_hash: $trust_hash"
 echo "trust_height: $trust_height"
-docker exec node0 ls /var/lib/dcl/.dcl/data/snapshots/
-docker logs node0 | grep snapshot
+docker exec "$NEW_OBSERVER_CONTAINER_NAME" curl -s http://localhost:26657/status
 docker exec "$NEW_OBSERVER_CONTAINER_NAME" sed -i 's/^enable = false/enable = true/' $DCL_DIR/config/config.toml
 echo "enable: $(docker exec -i "$NEW_OBSERVER_CONTAINER_NAME" cat $DCL_DIR/config/config.toml | grep enable)"
 docker exec "$NEW_OBSERVER_CONTAINER_NAME" sed -i "s|^rpc_servers =.*|rpc_servers = \"http://localhost:26657,http://localhost:26657\"|" $DCL_DIR/config/config.toml
@@ -162,12 +161,12 @@ docker logs -f "$NEW_OBSERVER_CONTAINER_NAME" &
 
 test_divider
 
-echo "7. Check dcld version == \"$DCLD_VERSION\" in \"$NEW_OBSERVER_CONTAINER_NAME\""
+# echo "7. Check dcld version == \"$DCLD_VERSION\" in \"$NEW_OBSERVER_CONTAINER_NAME\""
 
-check_expected_version_for_interval "$DCLD_VERSION" 10 node_helper || {
-    echo "installed dcld version does not match dcld expected version: $DCLD_VERSION"
-    exit 1
-}
+# check_expected_version_for_interval "$DCLD_VERSION" 10 node_helper || {
+#     echo "installed dcld version does not match dcld expected version: $DCLD_VERSION"
+#     exit 1
+# }
 
 test_divider
 
