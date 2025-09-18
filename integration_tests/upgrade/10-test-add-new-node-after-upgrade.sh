@@ -127,7 +127,7 @@ trust_height=$(((trust_height / 100) * 100))
 trust_hash=$(curl -s http://localhost:26657/commit?height=$trust_height | jq -r '.result.signed_header.commit.block_id.hash')
 echo "trust_hash: $trust_hash"
 echo "trust_height: $trust_height"
-docker exec "$NEW_OBSERVER_CONTAINER_NAME" ./dcld status || true
+
 docker exec "$NEW_OBSERVER_CONTAINER_NAME" sed -i 's/^enable = false/enable = true/' $DCL_DIR/config/config.toml
 echo "enable: $(docker exec -i "$NEW_OBSERVER_CONTAINER_NAME" cat $DCL_DIR/config/config.toml | grep enable)"
 docker exec "$NEW_OBSERVER_CONTAINER_NAME" sed -i "s|^rpc_servers =.*|rpc_servers = \"http://localhost:26657,http://localhost:26657\"|" $DCL_DIR/config/config.toml
@@ -157,6 +157,7 @@ test_divider
 echo "6. Start node \"$NEW_OBSERVER_CONTAINER_NAME\""
 docker exec "$NEW_OBSERVER_CONTAINER_NAME" sh -c 'rm -rf $DCL_DIR/data'
 docker exec -d "$NEW_OBSERVER_CONTAINER_NAME" sh -c "/var/lib/dcl/./node_helper.sh >> /proc/1/fd/1 2>&1"
+docker exec "$NEW_OBSERVER_CONTAINER_NAME" ./dcld status || true
 docker logs -f "$NEW_OBSERVER_CONTAINER_NAME" &
 
 test_divider
